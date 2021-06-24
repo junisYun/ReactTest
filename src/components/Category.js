@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 class Category extends Component {
     render() {
-      console.log("category render")
       var lists = [];
       var data = this.props.data;
       var i = 0;

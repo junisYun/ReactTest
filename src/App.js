@@ -1,8 +1,11 @@
 import './App.css';
 import React, { Component } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Category from './components/Category'
-import Content from './components/Content'
+import ReadContent from './components/ReadContent'
+import CreateContent from './components/CreateContent';
 import Subject from './components/Subject'
+import Control from './components/Control'
 
 class App extends Component {
   constructor(props) {
@@ -20,40 +23,57 @@ class App extends Component {
     }
   }
   render() {
-    console.log('App render');
-    var _title, _desc = null;
+    var _title, _desc, _article = null;
     if (this.state.mode === 'welcome') {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} sub={_desc}></ReadContent>
     } else if (this.state.mode === 'read') {
-        var i = 0;
-        while(i < this.state.category.length) {
-          var data = this.state.category[i];
-          if(data.id === this.state.selected_content_id) {
-            _title = data.title;
-            _desc = data.sub;
-            break;
-          }
-          i++;
+      var i = 0;
+      while (i < this.state.category.length) {
+        var data = this.state.category[i];
+        if (data.id === this.state.selected_content_id) {
+          _title = data.title;
+          _desc = data.sub;
+          break;
         }
+        i++;
+      }
+      _article = <ReadContent title={_title} sub={_desc}></ReadContent>
     }
-    console.log('render', this);
+    else if(this.state.mode === 'create') {
+      _article = <CreateContent></CreateContent>
+    } else if(this.state.mode === 'update') {
+      _article = <CreateContent></CreateContent>
+    } else if(this.state.mode === 'delete') {
+
+    }
     return (
       <div className="App">
-        <Subject
-          title={this.state.subject.title}
-          sub={this.state.subject.sub}
-          onChangePage={function () {
-            this.setState({ mode: 'welcome' });
-          }.bind(this)}>
-        </Subject>
-        <Category data={this.state.category}
-          onChangePage={function (id) {
-            this.setState(
-              {mode:'read', selected_content_id:Number(id)});
-          }.bind(this)}>
+        <div class="ps-3">
+          <Subject
+            title={this.state.subject.title}
+            sub={this.state.subject.sub}
+            onChangePage={function () {
+              this.setState({ mode: 'welcome' });
+            }.bind(this)}>
+          </Subject>
+
+          <Category data={this.state.category}
+            onChangePage={function (id) {
+              this.setState(
+                { mode: 'read', selected_content_id: Number(id) });
+            }.bind(this)}>
           </Category>
-        <Content title={_title} sub={_desc}></Content>
+          <Control onChangeMode={function (_mode) {
+            this.setState(
+              { mode: _mode }
+            )
+          }.bind(this)}></Control>
+
+
+          {_article}
+        </div>
       </div>
     );
   }

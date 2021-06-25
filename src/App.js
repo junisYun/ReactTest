@@ -6,12 +6,14 @@ import ReadContent from './components/ReadContent'
 import CreateContent from './components/CreateContent';
 import Subject from './components/Subject'
 import Control from './components/Control'
+import UpdateContent from './components/UpdateContent';
 
 class App extends Component {
   constructor(props) {
     super(props);
+    this.max_content_id = 3;
     this.state = {
-      mode: 'welcome',
+      mode: 'create',
       selected_content_id: 2,
       subject: { title: 'WEB', sub: 'World Wide Web!' },
       welcome: { title: 'Welcome', desc: 'Hello, React!!!' },
@@ -42,9 +44,26 @@ class App extends Component {
       _article = <ReadContent title={_title} sub={_desc}></ReadContent>
     }
     else if(this.state.mode === 'create') {
-      _article = <CreateContent></CreateContent>
+      _article = <CreateContent onSubmit={function(_title, _desc) {
+        // setState -> add content to this.state.contents
+        console.log(_title, _desc);
+        this.max_content_id += 1;
+        console.log(this.max_content_id);
+      
+        // this.state.category.push({id:this.max_content_id, title:_title, sub:_desc});
+        var _contents = this.state.category.concat(
+          {id:this.max_content_id, title:_title, sub:_desc}
+        );
+        this.setState(
+          {category:_contents}
+        );
+      }.bind(this)}></CreateContent>
     } else if(this.state.mode === 'update') {
-      _article = <CreateContent></CreateContent>
+      _article = <UpdateContent onSubmit={function(_title, _desc) {
+        this.setState(
+          
+        )
+      }.bind(this)}></UpdateContent>
     } else if(this.state.mode === 'delete') {
 
     }
@@ -69,9 +88,7 @@ class App extends Component {
             this.setState(
               { mode: _mode }
             )
-          }.bind(this)}></Control>
-
-
+          }.bind(this)}></Control> 
           {_article}
         </div>
       </div>
